@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+
+<head lang="en">
+    <title>Notes application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="notes.js"></script>
+    <script src="js/angular-drag-and-drop-lists.js"></script>
+
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap.css">
+    <!--<link rel="stylesheet" href="bootstrap-3.3.5-dist/css/*">-->
+    <meta charset="UTF-8">
+</head>
+
+<body ng-controller="NotesController">
+    <!--&lt;!&ndash;<div ng-repeat="note in notes" note.id=$index>&ndash;&gt;
+    <div ng-repeat="note in notes" note.order=$index>
+        <p class="note">
+            &lt;!&ndash;Note id: {{note._id}},&ndash;&gt;
+            Note text: {{note.text}},
+            &lt;!&ndash;Last updated: {{note.lastUpdated}}&ndash;&gt;
+            Last updated: {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}},
+            &lt;!&ndash;Note order: {{note.order}}&ndash;&gt;
+            <button type="button" class="btn btn-danger btn-xs" ng-click="remove(note._id)">Remove</button>
+            <button type="button" class="btn btn-warning btn-xs" ng-click="sendToTop(note.order)">Send to top</button>
+        </p>
+    </div>
+    <br />
+    <textarea rows="10" cols="50" ng-model="text"></textarea>
+    <br />
+    <select ng-model="order">
+        <option value="order">Sort by order</option>
+        <option value="text">Sort alphabetically</option>
+        <option value="date">Sort by date</option>
+    </select>
+    <br />
+    <br />
+    <button type="button" class="btn btn-primary btn-xs" ng-click="add()">Add note</button>
+    <button type="button" class="btn btn-warning btn-xs" ng-click="addFirst()">Add Top</button>-->
+    <!--<input ng-model="note.id"><button ng-click="remove(note.id)">Remove note</button>-->
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="navbar-brand">Notes tutorial app</div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" placeholder="Username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign in</button>
+                </form>
+            </div><!--/.navbar-collapse -->
+        </div>
+    </nav>
+
+    <div class="jumbotron">
+        <div class="container">
+            <h2>
+                <span class="glyphicon glyphicon-edit"></span>
+                Keep your notes in order
+            </h2>
+            <p>
+                A simple application to keep your own notes in order.
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add your note to {{activeSection}}</h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <textarea style="min-width:100%;min-height:200px" class="form-control" ng-model="text"></textarea>
+                        </div>
+                        <button ng-click="add()" class="btn btn-primary btn-xs">Post note</button>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Notes</div>
+
+                    <ul class="list-group" ng-repeat="note in notes">
+                        <li class="list-group-item">
+                            <span class="note-text">{{note.text}}</span>
+                            {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}}
+                            <button type="button" class="btn btn-danger btn-xs remove" ng-click="remove(note._id)">
+                                <span class="fa fa-remove"/></button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="input-group" style="padding-bottom: 20px">
+                    <input type="text"
+                           class=" form-control"
+                           placeholder="New section name"
+                           ng-model = "newSection">
+                    <span class="input-group-btn">
+                          <button class="btn btn-success" type="button"
+                                  ng-click="addSection()"><span class="fa fa-plus"/></button>
+                    </span>
+                </div>
+
+                <!-- Sections -->
+                <ul class="list-group" dnd-list="sections">
+                    <li href="#" class="list-group-item"
+                        dnd-draggable="section"
+                        dnd-moved="sections.splice($index, 1); writeSections();"
+                        ng-repeat="section in sections"
+                        ng-click="showSection(section)"
+                        ng-class="{active: section.title==activeSection}">
+                        {{section.title}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
