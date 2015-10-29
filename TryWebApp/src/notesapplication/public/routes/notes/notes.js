@@ -1,8 +1,7 @@
-var module = angular.module("myapp", ['dndLists']);
-
 module.controller('NotesController',
-    function($scope, $http) {
+    function($scope, $http, $routeParams, $location) {
         $scope.notes = [];
+        $scope.activeSection = $routeParams.activeSection;
 
         $scope.add = function() {
             if ($scope.text.length == 0) return;
@@ -47,6 +46,7 @@ module.controller('NotesController',
         };
 
         $scope.showSection = function(section) {
+            $location.path(section.title);
             $scope.activeSection = section.title;
             update();
         };
@@ -96,7 +96,7 @@ module.controller('NotesController',
                 .success(function(sections) {
                     $scope.sections = sections;
 
-                    if ($scope.sections.length > 0) {
+                    if (!$scope.activeSection && $scope.sections.length > 0) {
                         $scope.activeSection = $scope.sections[0].title;
                     }
 

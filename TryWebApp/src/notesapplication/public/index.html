@@ -3,8 +3,11 @@
 
 <head lang="en">
     <title>Notes application</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-    <script src="notes.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="routes/routes.js"></script>
+    <script src="routes/notes/notes.js"></script>
+    <script src="routes/viewSection/viewSection.js"></script>
     <script src="js/angular-drag-and-drop-lists.js"></script>
 
 
@@ -74,65 +77,7 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Add your note to {{activeSection}}</h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <textarea style="min-width:100%;min-height:200px" class="form-control" ng-model="text"></textarea>
-                        </div>
-                        <button ng-click="add()" class="btn btn-primary btn-xs">Post note</button>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">Notes</div>
-
-                    <ul class="list-group" ng-repeat="note in notes">
-                        <li class="list-group-item">
-                            <span class="note-text">{{note.text}}</span>
-                            {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}}
-                            <button type="button" class="btn btn-danger btn-xs remove" ng-click="remove(note._id)">
-                                <span class="fa fa-remove"/></button>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="input-group" style="padding-bottom: 20px">
-                    <input type="text"
-                           class=" form-control"
-                           placeholder="New section name"
-                           ng-model = "newSection">
-                    <span class="input-group-btn">
-                          <button class="btn btn-success" type="button"
-                                  ng-click="addSection()"><span class="fa fa-plus"/></button>
-                    </span>
-                </div>
-
-                <!-- Sections -->
-                <ul class="list-group" dnd-list="sections">
-                    <li href="#" class="list-group-item"
-                        dnd-draggable="section"
-                        dnd-moved="sections.splice($index, 1); writeSections();"
-                        ng-repeat="section in sections"
-                        ng-click="showSection(section)"
-                        ng-class="{active: section.title==activeSection}">
-                        {{section.title}}
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
+    <div class="container" ng-view></div>
 
 </body>
 
