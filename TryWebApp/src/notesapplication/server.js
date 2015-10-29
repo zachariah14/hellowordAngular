@@ -21,6 +21,10 @@ db.open(function() {
     db.collection('sections', function(error, sections) {
         db.sections = sections;
     });
+
+    db.collection('users', function(error, users) {
+        db.users = users;
+    });
 });
 
 
@@ -89,6 +93,25 @@ app.post("/sections/replace", function(req,resp) {
             if (err) console.log("err after insert", err);
             resp.end();
         });
+    });
+});
+
+app.get("/checkUser", function(req, res) {
+    res.send(req.query.user.length > 2);
+});
+
+app.get("/checkAge", function(req, res) {
+    var age = req.query.user.dateOfBirth;
+    var parseAge = age.split(".");
+    var year = parseAge[2];
+
+    res.send(parseInt(year) < 2003);
+});
+
+app.post("/users", function(req, res) {
+    db.users.insert(req.body, function(resp) {
+        req.session.username = req.body.userName;
+        res.end();
     });
 });
 

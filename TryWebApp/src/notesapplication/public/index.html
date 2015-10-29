@@ -8,6 +8,7 @@
     <script src="routes/routes.js"></script>
     <script src="routes/notes/notes.js"></script>
     <script src="routes/viewSection/viewSection.js"></script>
+    <script src="routes/userForm/userForm.js"></script>
     <script src="js/angular-drag-and-drop-lists.js"></script>
 
 
@@ -20,31 +21,6 @@
 </head>
 
 <body ng-controller="NotesController">
-    <!--&lt;!&ndash;<div ng-repeat="note in notes" note.id=$index>&ndash;&gt;
-    <div ng-repeat="note in notes" note.order=$index>
-        <p class="note">
-            &lt;!&ndash;Note id: {{note._id}},&ndash;&gt;
-            Note text: {{note.text}},
-            &lt;!&ndash;Last updated: {{note.lastUpdated}}&ndash;&gt;
-            Last updated: {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}},
-            &lt;!&ndash;Note order: {{note.order}}&ndash;&gt;
-            <button type="button" class="btn btn-danger btn-xs" ng-click="remove(note._id)">Remove</button>
-            <button type="button" class="btn btn-warning btn-xs" ng-click="sendToTop(note.order)">Send to top</button>
-        </p>
-    </div>
-    <br />
-    <textarea rows="10" cols="50" ng-model="text"></textarea>
-    <br />
-    <select ng-model="order">
-        <option value="order">Sort by order</option>
-        <option value="text">Sort alphabetically</option>
-        <option value="date">Sort by date</option>
-    </select>
-    <br />
-    <br />
-    <button type="button" class="btn btn-primary btn-xs" ng-click="add()">Add note</button>
-    <button type="button" class="btn btn-warning btn-xs" ng-click="addFirst()">Add Top</button>-->
-    <!--<input ng-model="note.id"><button ng-click="remove(note.id)">Remove note</button>-->
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -60,6 +36,7 @@
                         <input type="password" placeholder="Password" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-success">Sign in</button>
+                    <a class="btn btn-primary" ng-href="#/register">Register</a>
                 </form>
             </div><!--/.navbar-collapse -->
         </div>
