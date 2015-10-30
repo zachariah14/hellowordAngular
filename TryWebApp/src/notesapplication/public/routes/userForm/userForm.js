@@ -47,20 +47,22 @@ module.directive('uniqueUser', function($http, $timeout) {
     }
 });
 
-module.directive('legalAge', function($http, $timeout) {
-    var timer;
+module.directive('legalAge', function($http) {
     return {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, elem, attr, ctrl) {
             scope.$watch(attr.ngModel, function(value) {
-                if (timer) $timeout.cancel(timer);
-                timer = $timeout(function() {
-                    $http.get('/checkAge?user=' + value)
-                        .success(function(result) {
-                            ctrl.$setValidity('legal', result);
-                        });
-                }, 200);
+
+                if (value) {
+                    var parseAge = value.split(".");
+                    var year = parseAge[2];
+                    var age = parseInt(year);
+                    if (age > 2003) {
+                        ctrl.$setValidity('legal', false);
+                    }
+                }
+                //attr.ngModel.$validate();
             });
         }
     }

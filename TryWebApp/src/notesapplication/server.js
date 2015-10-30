@@ -41,30 +41,72 @@ app.use(session({
 app.listen(3000);
 
 /*WORKING WITH SECTIONS IN MONGO*/
+app.post("/login", function(req, res) {
+    db.users.find({userName:req.body.login, password:req.body.password})
+        .toArray(function(err, items) {
+            res.send(items.length > 0);
+        });
+});
+
 app.get("/sections", function(req,res) {
-    db.sections.find(req.query).toArray(function(err, items) {
+    var userName = req.session.userName || "demo";
+    db.users.find({userName:userName}).toArray(function(err, items) {
+        var user = items[0];
+        res.send(user.section);
+    })
+    /*db.sections.find(req.query).toArray(function(err, items) {
         res.send(items);
+    });*/
+});
+
+app.post("/sections/replace", function(req,res) {
+
+    var userName = req.session.userName || "demo";
+    db.users.update({userName:userName}, {$set:{section:req.body}}, function() {
+        res.end();
     });
+
+    /*//do not clear the list
+     if (req.body.length == 0) {
+     resp.end();
+     }
+     db.sections.remove({}, function(err, res) {
+     if (err) console.log(err);
+     db.sections.insert(req.body, function(err, res) {
+     if (err) console.log("err after insert", err);
+     resp.end();
+     });
+     });*/
 });
 
 /*WORKING WITH MONGO DB*/
 app.get("/notes", function(req,res) {
+    setUser(req);
     db.notes.find(req.query).toArray(function(err, items) {
         res.send(items);
     });
+
+    //db.notes.find(req.query).toArray(function(err, items) {
+    //    res.send(items);
+    //});
 });
 
+function setUser(req) {
+    req.query.userName = req.session.userName || "demo";
+}
+
 app.post("/notes", function(req, res) {
+    setUser(req);
     var note = req.body;
-    note.order = req.query.order;
+    note.order = req.order;
+    note.userName = req.query.userName;
     var date = new Date();
-    note.lastUpdated = date;//.toDateString();
+    note.lastUpdated = date;
     db.notes.insert(note);
     res.end();
 });
 
 app.post("/notes/top", function(req, res) {
-    //var order = req.query.order;
     db.notes.find().sort({order: -1}).limit(1);
 
     res.end();
@@ -82,30 +124,8 @@ app.delete("/notes", function(req,res) {
     });
 });
 
-app.post("/sections/replace", function(req,resp) {
-    //do not clear the list
-    if (req.body.length == 0) {
-        resp.end();
-    }
-    db.sections.remove({}, function(err, res) {
-        if (err) console.log(err);
-        db.sections.insert(req.body, function(err, res) {
-            if (err) console.log("err after insert", err);
-            resp.end();
-        });
-    });
-});
-
 app.get("/checkUser", function(req, res) {
     res.send(req.query.user.length > 2);
-});
-
-app.get("/checkAge", function(req, res) {
-    var age = req.query.user.dateOfBirth;
-    var parseAge = age.split(".");
-    var year = parseAge[2];
-
-    res.send(parseInt(year) < 2003);
 });
 
 app.post("/users", function(req, res) {

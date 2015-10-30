@@ -1,4 +1,4 @@
-var module = angular.module("myapp", ['dndLists', 'ngRoute']);
+var module = angular.module("myapp", ['ngResource', 'dndLists', 'ngRoute']);
 
 module.config(['$routeProvider', function($routeProvider) {
     $routeProvider.

@@ -1,9 +1,9 @@
 module.controller('NotesController',
-    function($scope, $http, $routeParams, $location) {
+    function($scope, $http, $routeParams, $location, Note) {
         $scope.notes = [];
         $scope.activeSection = $routeParams.activeSection;
 
-        $scope.add = function() {
+        /*$scope.add = function() {
             if ($scope.text.length == 0) return;
             var note = {
                 text: $scope.text,
@@ -18,6 +18,19 @@ module.controller('NotesController',
                     $scope.text = "";
                     update();
                 });
+        };*/
+
+        //REST impl of add
+        $scope.add = function() {
+            if ($scope.text.length == 0) return;
+
+            var note = new Note();
+            note.text = $scope.text;
+            note.section = $scope.activeSection;
+            note.$save(function() {
+                $scope.text = "";
+                update();
+            })
         };
 
         $scope.addFirst = function() {
@@ -52,6 +65,7 @@ module.controller('NotesController',
         };
 
         $scope.writeSections = function() {
+            console.log($scope.sections);
             if ($scope.sections && $scope.sections.length > 0) {
                 $http.post("/sections/replace", $scope.sections);
             }
@@ -68,20 +82,33 @@ module.controller('NotesController',
             }
 
             var section = {title: $scope.newSection};
-            $scope.sections.unshift(section);
-            $scope.activeSection = $scope.newSection;
+            if ($scope.sections.length) {
+                $scope.sections.unshift(section);
+            } else {
+                $scope.sections = [];
+                $scope.sections.push(section);
+            }
+
+            $scope.activeSection = section;
             $scope.newSection = "";
             $scope.writeSections();
             update();
         };
 
         //update version for section impl
-        var update = function() {
+        /*var update = function() {
             var params = {params: {section: $scope.activeSection}};
             $http.get("/notes", params)
                 .success(function(notes) {
                     $scope.notes = notes;
                 });
+        };*/
+
+        //update version for REST
+        var update = function() {
+            $scope.notes = Note.query({
+                section:$scope.activeSection
+            });
         };
 
         /*var update = function() {
@@ -106,4 +133,8 @@ module.controller('NotesController',
 
         readSections();
         update();
+});
+
+module.factory('Note', function($resource) {
+    return $resource('/notes')
 });
